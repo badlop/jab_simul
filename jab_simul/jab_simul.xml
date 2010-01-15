@@ -1,0 +1,60 @@
+<dpsm>
+
+  <!-- Generatory przestrzeni nazw userow -->
+  <events_after>999</events_after>
+
+  <!-- Userzy testowi -->
+  <user_names_generator>
+    <range><from>100</from><to>1100</to></range>
+    <name>rabbit%(num:u)</name>
+    <server>jabber.localhost</server>
+  </user_names_generator>
+
+  <!-- Wlasciwosci uzytkownikow wybranych z przestrzeni nazw -->
+  <user_properities>
+   <filter><name>rabbit.*</name></filter>
+   <properities>
+    	<fullname>rabbit%(num*2:u)-%(3+num%12000/(1+3)+7:u)</fullname>
+	<password>rabbit%(num:u)</password>
+	<resource>Dom</resource>
+	<host>10.10.9.148</host>
+	<ssl/>
+<!-- Polacz sie z serwerem -->
+        <event><name>connect</name><frequency>10000</frequency>
+		<counter>20</counter>
+		<!--Mozemy sie logowac digestem a nie plainem: <digest/> -->
+	</event>
+
+
+<!-- Dodajemy do rostera nowego uzytk. wylosowanego z podanego zakresu -->
+	<event><name>xadd_roster</name><frequency>40000</frequency>
+		<user><range><from>100</from><to>200</to></range></user>
+                <max_roster_count>30</max_roster_count>
+        </event>
+<!-- Usuwamy z rostera uzytk. wylosowanego z rostera -->
+	<event><name>xdel_roster</name><frequency>30000</frequency></event>
+<!-- Wysylamy wiadomosc -->
+	<event><name>xsend_message</name><frequency>5000</frequency>
+		<user><range><from>100</from><to>200</to></range></user>
+		<prepend_with_debug_info/>
+                <text>Wiadomosc testowa krotka</text></event>
+<!-- Zmieniamy status -->
+	<event><name>xchange_status</name><frequency>10000</frequency>
+		<!-- Mozna podac dokladnie co, a domyslnie losuje-->
+		<!--<status>Jezdem tera dostepny</status><show>chat</show>-->
+	</event>
+
+<!-- Zamykaj ladnie polaczenie -->
+	<Xevent><name>logout</name><frequency>600000</frequency></Xevent>
+<!-- Zabijaj polaczenie -->
+	<Xevent><name>kill_connection</name><frequency>650000</frequency></Xevent>
+<!-- Tez powinno zabic polaczenie -->
+	<Xevent><name>send_raw_bytes</name><frequency>300000</frequency>
+		<random_stream len="1000"/>
+        </Xevent>
+
+   </properities>
+  </user_properities>
+
+
+</dpsm>

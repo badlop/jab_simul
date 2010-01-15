@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo "/* Generated automatically by ./configure. Do not modify. */" > config.h
+cat CHANGELOG | grep -E "^200[0-9]-[0-9][0-9]-" | head -n 1
+echo >> config.h
+echo "#ifndef __CONFIG_H__" >> config.h
+echo "#define __CONFIG_H__" >> config.h
+echo >> config.h
+cat CHANGELOG | grep -E "^ *200[0-9]-[0-9][0-9]" | head -n 1 |\
+    sed "s/ *\([0-9\-]*[a-z]*\)/#define JAB_SIMUL_VER \"\1\"/" >> config.h
+echo >> config.h
+echo "#define USE_NCURSES 1" >> config.h
+echo "#endif" >> config.h
+cat CHANGELOG | sed "s/\(.*\)\"\(.*\)\"\(.*\)/\1\\\\\"\2\\\\\"\3/"\
+ | sed "s/^.*$/\"\0\\\\n\"/" > changelog.inc
