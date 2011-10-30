@@ -60,7 +60,7 @@ void exit_app(int code) {
 #ifdef POOL_DEBUG
 void debug_log(char *zone, const char *msgfmt, ...) {
   va_list ap;
-  
+
   va_start(ap, msgfmt);
   vfprintf(stderr, msgfmt, ap);
   fprintf(stderr, "\n");
@@ -149,7 +149,7 @@ void sigerr_handler(int sig) {
 }
 /* sielim PATCH end */
 
-extern int nms_init(char*,char*,int,int); 
+extern int nms_init(char*,char*,int,int);
 extern int yyparse();
 
 int sprintf_pattern(char* buf, int buf_size,char* pattern,
@@ -171,7 +171,7 @@ int generate_user_names_space(jpolld_instance ins,xmlnode xcfg) {
     ins->user_names_space[j].enabled=0;
   }
   /* Generacja przestrzeni userow */
-  
+
   tag_iter_init(&un_iter,xcfg,"user_names_generator");
   while ((cur=tag_iter_get_next(&un_iter))) {
     int range_from=0;
@@ -186,7 +186,7 @@ int generate_user_names_space(jpolld_instance ins,xmlnode xcfg) {
       range_to = j_atoi(xmlnode_get_tag_data(range, "to"),range_to);
     }
     // TODO: Dorobic wczytywanie listy z pliku
-    if (name_pattern && range_to>-1) {	  
+    if (name_pattern && range_to>-1) {
       int i;
       for (i=range_from;i<=range_to;i++) {
 	_user_name* us_name=&ins->user_names_space[i];
@@ -205,7 +205,7 @@ int generate_user_names_space(jpolld_instance ins,xmlnode xcfg) {
 user_properities alive_users_list=NULL;
 
 int set_users_properities(jpolld_instance ins,xmlnode xcfg) {
-  int users_count=0; 
+  int users_count=0;
   //typedef struct tmpevstr {void* arg;struct tmpevstr* next;} tmpevstr;
   //TODO: To jest tymczasowe, trzeba to bedzie jakosc globalniej trzymac
   // i troche inaczej naliczac.
@@ -220,9 +220,9 @@ int set_users_properities(jpolld_instance ins,xmlnode xcfg) {
   tag_iter_init(&up_iter,xcfg,"user_properities");
   while ((cur=tag_iter_get_next(&up_iter))){
     s_tag_iter ev_iter;
-    regex_t c_nameregexp;  
+    regex_t c_nameregexp;
     regmatch_t name_matches[MaxRegExMatches];
-    regex_t c_serverregexp;  
+    regex_t c_serverregexp;
     regmatch_t server_matches[MaxRegExMatches];
     // Ktorych to dotyczy userow ?
     xmlnode filter=xmlnode_get_tag(cur, "filter");
@@ -252,7 +252,7 @@ int set_users_properities(jpolld_instance ins,xmlnode xcfg) {
     event_repeater ev_list=NULL;
     xmlnode xml_repeater;
     event_repeater* ev_list_cur=&ev_list;
-    
+
     if (filter) {
       char *tmp;
       xmlnode range=xmlnode_get_tag(filter,"range");
@@ -266,21 +266,21 @@ int set_users_properities(jpolld_instance ins,xmlnode xcfg) {
       }
     }
     if (regcomp(&c_nameregexp,filter_name_regexp,REG_EXTENDED)) {
-      printf("ERROR: Wrong regular expression(%s) in filter !\n",filter_name_regexp); 
+      printf("ERROR: Wrong regular expression(%s) in filter !\n",filter_name_regexp);
       exit_app(1);
     }
     debug(INFO_DL,"Name regex: %s.\n",filter_name_regexp);
     if (regcomp(&c_serverregexp,filter_server_regexp,REG_EXTENDED)) {
-      printf("ERROR: Wrong regular expression(%s) in filter !\n",filter_server_regexp); 
+      printf("ERROR: Wrong regular expression(%s) in filter !\n",filter_server_regexp);
       exit_app(1);
     }
     debug(INFO_DL,"Server regex: %s.\n",filter_server_regexp);
     // TODO: Dorobic ewentualne inne filtry (np. po numerze ?)
-    
-    // ************************************ 
+
+    // ************************************
     //   Czytamy wlasciwosci danej grupy
-    // ************************************ 
-    
+    // ************************************
+
     passwd_pattern=xmlnode_get_tag_data(properities,"password");
     resource_pattern=xmlnode_get_tag_data(properities,"resource");
     fullname_pattern=xmlnode_get_tag_data(properities,"fullname");
@@ -289,26 +289,26 @@ int set_users_properities(jpolld_instance ins,xmlnode xcfg) {
     ssl = xmlnode_get_tag(properities,"ssl") ? 1 : 0;
     connection_timeout=j_atoi(xmlnode_get_tag_data(properities,"connection_timeout"),-1);;
     login_timeout=j_atoi(xmlnode_get_tag_data(properities,"login_timeout"),-1);;
-    
-    // Czy to user testowy do sprawdzania czasu logowania ? 
+
+    // Czy to user testowy do sprawdzania czasu logowania ?
     if (xmlnode_get_tag(properities,"exit_after_login")) flags|=UPF_EXIT_AFTER_LOGIN;
-    // Czy user ma byc na podgladzie ? 
+    // Czy user ma byc na podgladzie ?
     if (xmlnode_get_tag(properities,"sniff")) {
       flags|=UPF_SNIFF;
       sniff_dir=pstrdup(main_config.p,xmlnode_get_tag_data(properities,"sniff"));
       if (sniff_dir) while (sniff_dir[0] && sniff_dir[strlen(sniff_dir)-1]=='/')
 	sniff_dir[strlen(sniff_dir)-1]=0; //Kasujemy wszyskie slashe na koncu
     }
-    
+
     // Konfigurujemy wstepnie ustawione eventy czasowe
     tag_iter_init(&ev_iter,properities,"event");
     while ((xml_repeater=tag_iter_get_next(&ev_iter))) {
       (*ev_list_cur)=create_repeater_from_xml(xml_repeater,&curtime);
       ev_list_cur=&((*ev_list_cur)->next);
     }
-    
+
     // A teraz przepuszczamy cala przestrzen nazw userow przez filtr
-    for (j=0;j<MAX_USERS;j++) if (ins->user_names_space[j].enabled && 
+    for (j=0;j<MAX_USERS;j++) if (ins->user_names_space[j].enabled &&
 				  j>=filter_range_from && j<=filter_range_to &&
 				  !regexec(&c_nameregexp,ins->user_names_space[j].user,
 					   MaxRegExMatches,name_matches,0) &&
@@ -320,22 +320,22 @@ int set_users_properities(jpolld_instance ins,xmlnode xcfg) {
       char resource_buf[1000]="";
       char fullname_buf[1000]="";
       char host_buf[1000]="";
-      
+
       //Przypasowal...
       debug(DET_DL,"Pasuje: %s@%s\n",ins->user_names_space[j].user,ins->user_names_space[j].server);
       // Ustawiamy rozne wlasciwosci
       // Password:
       if (passwd_pattern) sprintf_pattern(passwd_buf, sizeof(passwd_buf),passwd_pattern,j,
-					  ins->user_names_space[j].user,name_matches/*TODO*/);	
+					  ins->user_names_space[j].user,name_matches/*TODO*/);
       // Resource:
       if (resource_pattern) sprintf_pattern(resource_buf, sizeof(resource_buf),resource_pattern,j,
-					    ins->user_names_space[j].user,name_matches/*TODO*/);	
+					    ins->user_names_space[j].user,name_matches/*TODO*/);
       // Fullname:
       if (fullname_pattern) sprintf_pattern(fullname_buf, sizeof(fullname_buf),fullname_pattern,j,
-					    ins->user_names_space[j].user,name_matches/*TODO*/);	
+					    ins->user_names_space[j].user,name_matches/*TODO*/);
       // Host:
       if (host_pattern) sprintf_pattern(host_buf,sizeof(host_buf),host_pattern,j,
-					ins->user_names_space[j].user,name_matches/*TODO*/); 
+					ins->user_names_space[j].user,name_matches/*TODO*/);
       //Dodajemy nowego usera do aktywnych (symulowanych) nadajac wlasciwosci
       user=user_create(&ins->user_names_space[j],passwd_buf,resource_buf,fullname_buf,
 		       host_pattern?host_buf:NULL,port,ev_list, ssl);
@@ -359,7 +359,7 @@ int set_users_properities(jpolld_instance ins,xmlnode xcfg) {
 
 void delete_users_properities(jpolld_instance ins) {
   int j;
-  for (j=0;j<MAX_USERS;j++) if (ins->users[j]) user_delete(ins->users[j]);  
+  for (j=0;j<MAX_USERS;j++) if (ins->users[j]) user_delete(ins->users[j]);
 }
 
 /**************************************************
@@ -426,7 +426,7 @@ int configure(jpolld_instance i,config cfg, char *cfgfile)
 	  debug(WARN_DL,"Logging full master socket !\n");
 	}
 	if (log_stat_socket) {
-	  cfg->log_stat_socket.count = 
+	  cfg->log_stat_socket.count =
 	    j_atoi(xmlnode_get_tag_data(log_stat_socket, "count"),0);
 	  cfg->log_stat_socket.write_log_interval=
 	    j_atoi(xmlnode_get_tag_data(log_stat_socket, "write_log_interval"),
@@ -476,14 +476,14 @@ int main(int argc, char *argv[])
       printf("jabb_simul - symulator klientow jabbera. Wersja: %s\n"
 	     "Type jabb_simul -c to see whole changelog.\n(C) by Wirtualna Polska S.A.\n",JAB_SIMUL_VER);
       exit_app(0);
-    } 
+    }
     if (argc>=2 && (!strcmp(argv[1],"-c") || !strcmp(argv[1],"--changelog"))) {
       printf("jabb_simul - symulator klientow jabbera. Wersja: %s\nCHANGELOG:"
 	     "\n**************************************************\n%s"
 	     "\n**************************************************\n"
 	     "(C) by Wirtualna Polska S.A.\n",JAB_SIMUL_VER,changelog);
       exit_app(0);
-    } 
+    }
     openlog("jab_simul",LOG_PID,LOG_DAEMON);                   /* sielim PATCH */
 
     /* Ustawiamy sygnaly */

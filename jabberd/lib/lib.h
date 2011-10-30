@@ -79,7 +79,7 @@ char *zonestr(char *file, int line);
 #undef POOL_DEBUG
 /*
  flip these, this should be a prime number for top # of pools debugging
-#define POOL_DEBUG 40009 
+#define POOL_DEBUG 40009
 */
 
 /* pheap - singular allocation of memory */
@@ -90,7 +90,7 @@ struct pheap
 };
 
 /* pool_cleaner - callback type which is associated
-   with a pool entry; invoked when the pool entry is 
+   with a pool entry; invoked when the pool entry is
    free'd */
 typedef void (*pool_cleaner)(void *arg);
 
@@ -115,11 +115,11 @@ typedef struct pool_struct
     char name[8], zone[32];
     int lsize;
 } _pool, *pool;
-#define pool_new() _pool_new(ZONE) 
-#define pool_heap(i) _pool_new_heap(i,ZONE) 
+#define pool_new() _pool_new(ZONE)
+#define pool_heap(i) _pool_new_heap(i,ZONE)
 #else
 } _pool, *pool;
-#define pool_heap(i) _pool_new_heap(i,NULL) 
+#define pool_heap(i) _pool_new_heap(i,NULL)
 #define pool_new() _pool_new(NULL)
 #endif
 
@@ -288,8 +288,8 @@ char *spools(pool p, ...); /* wrap all the spooler stuff in one function, the ha
 #define NTYPE_LAST   2
 #define NTYPE_UNDEF  -1
 
-/* -------------------------------------------------------------------------- 
-   Node structure. Do not use directly! Always use accessor macros 
+/* --------------------------------------------------------------------------
+   Node structure. Do not use directly! Always use accessor macros
    and methods!
    -------------------------------------------------------------------------- */
 typedef struct xmlnode_t
@@ -301,9 +301,9 @@ typedef struct xmlnode_t
      int                 complete;
      pool               p;
      struct xmlnode_t*  parent;
-     struct xmlnode_t*  firstchild; 
+     struct xmlnode_t*  firstchild;
      struct xmlnode_t*  lastchild;
-     struct xmlnode_t*  prev; 
+     struct xmlnode_t*  prev;
      struct xmlnode_t*  next;
      struct xmlnode_t*  firstattrib;
      struct xmlnode_t*  lastattrib;
@@ -313,7 +313,7 @@ typedef struct xmlnode_t
 xmlnode  xmlnode_wrap(xmlnode x,const char* wrapper);
 xmlnode  xmlnode_new_tag(const char* name);
 xmlnode  xmlnode_new_tag_pool(pool p, const char* name);
-xmlnode  xmlnode_insert_tag(xmlnode parent, const char* name); 
+xmlnode  xmlnode_insert_tag(xmlnode parent, const char* name);
 xmlnode  xmlnode_insert_cdata(xmlnode parent, const char* CDATA, unsigned int size);
 xmlnode  xmlnode_insert_tag_node(xmlnode parent, xmlnode node);
 void     xmlnode_insert_node(xmlnode parent, xmlnode node);
@@ -367,7 +367,7 @@ int      xmlnode_has_attribs(xmlnode node);
 /* Node-to-string translation */
 char*    xmlnode2str(xmlnode node);
 
-/* Node-to-terminated-string translation 
+/* Node-to-terminated-string translation
    -- useful for interfacing w/ scripting langs */
 char*    xmlnode2tstr(xmlnode node);
 
@@ -440,7 +440,7 @@ void shaBlock(unsigned char *dataIn, int len, unsigned char hashout[20]);
 #define JID_SERVER   4
 
 typedef struct jid_struct
-{ 
+{
     pool               p;
     char*              resource;
     char*              user;
@@ -448,7 +448,7 @@ typedef struct jid_struct
     char*              full;
     struct jid_struct *next; /* for lists of jids */
 } *jid;
-  
+
 jid     jid_new(pool p, char *idstr);	       /* Creates a jabber id from the idstr */
 void    jid_set(jid id, char *str, int item);  /* Individually sets jid components */
 char*   jid_full(jid id);		       /* Builds a string type=user/resource@server from the jid data */
@@ -502,7 +502,7 @@ typedef struct jpacket_struct
     xmlnode       iq;
     pool          p;
 } *jpacket, _jpacket;
- 
+
 jpacket jpacket_new(xmlnode x);	    /* Creates a jabber packet from the xmlnode */
 jpacket jpacket_reset(jpacket p);   /* Resets the jpacket values based on the xmlnode */
 int     jpacket_subtype(jpacket p); /* Returns the subtype value (looks at xmlnode for it) */
@@ -514,7 +514,7 @@ int     jpacket_subtype(jpacket p); /* Returns the subtype value (looks at xmlno
 /*                                                           */
 /* --------------------------------------------------------- */
 typedef struct ppdb_struct
-{			      
+{
     jid     id;		       /* entry data */
     int     pri;
     xmlnode x;
@@ -543,14 +543,14 @@ typedef struct jlimit_struct
     int maxt, maxp;
     pool p;
 } *jlimit, _jlimit;
- 
+
 jlimit jlimit_new(int maxt, int maxp);
 void jlimit_free(jlimit r);
 int jlimit_check(jlimit r, char *key, int points);
 
 
 // #define KARMA_DEBUG
-// default to disable karma 
+// default to disable karma
 #define KARMA_READ_MAX(k) (abs(k)*100) /* how much you are allowed to read off the sock */
 #define KARMA_INIT 5   /* internal "init" value */
 #define KARMA_HEARTBEAT 2 /* seconds to register for heartbeat */

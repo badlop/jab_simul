@@ -61,9 +61,9 @@ struct status_str statusy[]={
 char* makeUserName_defined_in_xml(char* buf, int maxsize, xmlnode x, user_properities sender) {
   // Procedurka rozbiera xml'e typu:
   //  "<range><from>100</from><to>110</to></range>" lub
-  //  "<from_roster>" lub 
+  //  "<from_roster>" lub
   //  "<jid>dalen@jabber.wp.pl</jid>"
-  // Pierwsza postac oznacza, ze user ma zostac wylosowany z 
+  // Pierwsza postac oznacza, ze user ma zostac wylosowany z
   // przestrzeni userow (w podanym zakresie).
   // Druga - losujemy z rostera danego usera
   // Trzecia - dajemy bezposrednio podana nazwe
@@ -86,7 +86,7 @@ char* makeUserName_defined_in_xml(char* buf, int maxsize, xmlnode x, user_proper
 	snprintf(buf,maxsize,"%s@%s",i->user_names_space[num].user,i->user_names_space[num].server);
 	return buf;
       }
-    } 
+    }
   } else if ((id=xmlnode_get_tag_data(x,"jid"))) {
     snprintf(buf,maxsize,"%s",id);
     return buf;
@@ -106,7 +106,7 @@ char* makeBytes_defined_in_xml(user_properities user,pool p,char* buf, int maxsi
   // (bez zadnych modyfikacji).
   // W przypadku drugim wpisuje do bufora zawartosc pliku (tez bez zmian).
   // W szczegolnosci pliki moga byc binarne, a z tym trzeba uwazac.
-  // Mozna tez zlecic, zeby do bufora trafil losowy ciag znakow (o podanej dlugosci), bez zer w srodku; 
+  // Mozna tez zlecic, zeby do bufora trafil losowy ciag znakow (o podanej dlugosci), bez zer w srodku;
   // Jesli buf==0 to procedura uzywa podanego poola do zaallokowania
   // odpowiedniego bufora.
   // UWAGA: Jesli podamy <prepend_with_debug_info> to przed wlasciwym wpisem do bufora
@@ -171,7 +171,7 @@ char* makeBytes_defined_in_xml(user_properities user,pool p,char* buf, int maxsi
 }
 
 /* Zestaw handlerow eventow czasowych */
-/* Sluza one symulacji dzialan rzeczywistego uzytkownika, dodaje sie je do 
+/* Sluza one symulacji dzialan rzeczywistego uzytkownika, dodaje sie je do
    repeatera, ustawia odpowiednia czestotliwosc i powinno zaskoczyc. Czestatliwosci
    sa przyblizone, bo repeater specjalnie sam wprowadza losowe odchylenia. */
 
@@ -231,7 +231,7 @@ void ev_add_roster(event_repeater ev,user_properities user, struct timeval* curt
 	  // Na razie ze wzgledu na zgodnosc z orginalnym Kontaktem, nie czekamy na potwierdzenie, tylko
 	  // od razu slemy presence'a
 	  user_do_presence(user, curtime, "subscribe", jid_full, user->Status, user->Show);
-	} 
+	}
       }
       else user_debug(user,ROST_DL,"%s already in roster.Skipped\n",jid_full);
     }
@@ -251,8 +251,8 @@ void ev_del_roster(event_repeater ev,user_properities user, struct timeval* curt
     //Wysylamy xml'a
     if (!user_do_adddel_roster_item(user,curtime,ri->jid,NULL,1)) {
       ev_del_roster_count++;
-      
-      /* Nie robimy tego teraz. Potwierdzenie samo to zrobi za nas. 
+
+      /* Nie robimy tego teraz. Potwierdzenie samo to zrobi za nas.
       //Usuwamy z rostera
       xhash_zap(user->roster_hash,ri->jid);
       roster_item_delete(ri);
@@ -305,7 +305,7 @@ void ev_change_status(event_repeater ev,user_properities user, struct timeval* c
     if (!user->Status) user->Status=statusy[r].Status;
     if (!user->Show)   user->Show=  statusy[r].Show;
   }
-  
+
   if (!user_do_presence(user,curtime,NULL,NULL,user->Status,user->Show)) ev_change_status_count++;
 }
 
@@ -354,7 +354,7 @@ void copy_repeaters(pool p, event_repeater* plist_to, event_repeater listfrom) {
 // tworzymy nowy element, ktory mozna pozniej dodac
 // do listy repeaterow.
 // Procedura zajmuje sie rozpoznawaniem roznych typow repeaterow (eventow) - zawiera
-// ich deklaracje - 
+// ich deklaracje -
 // i w zaleznosci od tego w rozny sposob allokuje dane i przydziela handlery.
 #define BEGIN_REPEATERS if (0) {
 #define REPEATER(name,par_handler,par_arg,us_state)} else if (j_strcmp(ev_name,name)==0) {\

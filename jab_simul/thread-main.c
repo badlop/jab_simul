@@ -54,7 +54,7 @@ int stat_printf(stat_printf_fun sprf, struct timeval* curtime) {
 	do_events = 1;
 	events_start_after = -1;
   }
-  
+
   //days=hours/24;hours=hours%24;
   sprf(0,"%02i:%02i.%02i\n",hours,mins,secs);
   sprf(1,"Conn stat:  conns:  total: %i\t estabilished: %i  \n",
@@ -81,13 +81,13 @@ int stat_printf(stat_printf_fun sprf, struct timeval* curtime) {
        packets_canceled,packets_created-(packets_sent+packets_canceled));
   sprf(12,"   --------------\n");
   return 0;
-} 
-  
+}
+
 jpolld_thread thread_init(int id, int rport, jpolld_instance i) {
   int j;
   pool p;
   jpolld_thread t;
-  
+
   p =  pool_new();
   t = pmalloco(p, sizeof(_jpolld_thread));
   /* XXX this doesn't work in a threaded world */
@@ -109,13 +109,13 @@ void handle_POLLERR(jpolld_thread t, int j, struct timeval* curtime) {
   // Jesli socket sie popsul ...
   int error;
   int err_size=sizeof(error);
-  if (getsockopt( t->pfds[j].fd, SOL_SOCKET, SO_ERROR, &error, &err_size) < 0) error=errno;  
+  if (getsockopt( t->pfds[j].fd, SOL_SOCKET, SO_ERROR, &error, &err_size) < 0) error=errno;
   debug(ERR_DL,"POLLERR: %s\n",strerror(error));
 
-  if (error == EWOULDBLOCK || error == EAGAIN || error==EINPROGRESS ) 
+  if (error == EWOULDBLOCK || error == EAGAIN || error==EINPROGRESS )
     //Falszywy alarm, po prostu jest zamielony albo co
     return;
-  
+
   if (t->conns[j]->sstate==sock_CONN_IN_PROGRESS) {
     //accept_connected(t->pfds[j].fd,&t->conns[j]->sstate);//Sprawdzi nam errory
     if (t->conns[j]->user && (t->conns[j]->user->flags&UPF_EXIT_AFTER_LOGIN))
@@ -135,7 +135,7 @@ void handle_POLLOUT(jpolld_thread t, int j, struct timeval* curtime) {
     if (t->conns[j]->ssl)
       jab_ssl_connect(t->conns[j]->ssl);
 
-    return; 
+    return;
     //Powinien byc return, bo na read moze wyskoczyc blad "Resource temporarily unavailable"
   }
 
@@ -160,11 +160,11 @@ void handle_POLLIN(jpolld_thread t, int j, struct timeval* curtime) {
     if (t->conns[j]->ssl)
       jab_ssl_connect(t->conns[j]->ssl);
 
-    return; 
+    return;
     //Powinien byc return, bo na read moze wyskoczyc blad "Resource temporarily unavailable"
   }
   SpUs_logreaduser(t->conns[j],"*** event POLLIN(R)\n");     /* sielim PATCH */
-  
+
   debug(DET_DL,"[%li:%li] some event (IN) on fd=%i\n",    /* sielim PATCH */
 	curtime->tv_sec,curtime->tv_usec,
 	t->pfds[j].fd);
@@ -175,7 +175,7 @@ void handle_POLLIN(jpolld_thread t, int j, struct timeval* curtime) {
   else
     n = read(t->pfds[j].fd, line, maxlen);                  /* dpsm PATCH */
 
-  if( (n <= 0) && (!blocked) ) {                     
+  if( (n <= 0) && (!blocked) ) {
     user_finish_conn(t->conns[j]->user,n<0 ? strerror(errno):"0 bytes read");
     //t->conns[j]->state=state_CLOSING;
   } else {
@@ -208,16 +208,16 @@ void *thread_main(void *arg) {
   debug(INFO_DL,"\n\n*********************\n\n        Begin loop\n\n*********************\n\n");
   /*sielim PATCH end*/
   gettimeofday(&start_time,NULL);
-  
+
   /* XXX Move this to the master thread */
   while(1) {
-    //pool_stat(1); 
+    //pool_stat(1);
     //nready=my_poll(t);
     nready = poll((struct pollfd *)&(t->pfds), t->mpfd + 1, LOOP_TIMO);
     gettimeofday(&curtime,NULL);
     {
       // ************************************************************
-      // Zadanie pierwsze - niskopoziomowe - sprawdzic co sie dzieje 
+      // Zadanie pierwsze - niskopoziomowe - sprawdzic co sie dzieje
       // na socketach:
       //  a)odebrac dane z socketow
       //  b)wyslac dane, ktore siedza w buforach, jesli mozna
@@ -226,12 +226,12 @@ void *thread_main(void *arg) {
 	/* sielim PATCH */
 	if (errno==EINTR) {
 	  fprintf(stderr,"[%d] Ignoring interrupt while poll (%s)\n",t->id,strerror(errno));
-	  continue; 
+	  continue;
 	}
 	if (errno==ENOMEM) {
 	  fprintf(stderr,"[%d] Ignoring error while poll (%s)\n",t->id,strerror(errno));
 	  usleep(500000);
-	  continue; 
+	  continue;
 	}
 	fprintf(stderr,"[%d] Poll failed: %s\n",t->id,strerror(errno));
 	break;
@@ -243,7 +243,7 @@ void *thread_main(void *arg) {
 	printf("IN: %i->%i OUT: %i->%i\n",
 	       t->pfds[j].events&POLLIN,t->pfds[j].revents&POLLIN,
 	       t->pfds[j].events&POLLOUT,t->pfds[j].revents&POLLOUT);*/
-	//UWAGA : W ponizszej sekwencji nie nalezy zdejmowac 'else'. W jednym przebiegu petli na 
+	//UWAGA : W ponizszej sekwencji nie nalezy zdejmowac 'else'. W jednym przebiegu petli na
 	// jednym polaczniu nie powinno byc obslugiwanych kilka operacji jednoczesnie, bo jedna
 	// moze drugiej usunac polaczenie. Poza tym write'y do socketa powinny miec wyzszy priorytet
 	// niz read'y (zeby sie nie zapychal)
@@ -268,13 +268,13 @@ void *thread_main(void *arg) {
       //  b) wysylanie wiadomosci, presence, zadania o rooster
       //  c) symulacja wszelkich innych zadan
       // ************************************************************
-      
+
       user_properities user;
       for (user=alive_users_list;user;user=user->next) {
 	user_do_your_job(user,&curtime);
-      }	  
+      }
       users_check_timestamp=ut(curtime);
-    }        
+    }
     if (ut(curtime)-info_timestamp > INFO_STAT_INTERVAL*1000) {
       int diff=ev_send_message_count+forwarded_messages_count-(received_messages_count-received_messages_admin_count);
       add_diff_stat(diff-last_diff);
@@ -326,6 +326,6 @@ void *thread_main(void *arg) {
   }
   fprintf(stderr, "[%d] Closing down thread\n", t->id);
   pool_free(t->p);
-  
+
   return 0;
 }

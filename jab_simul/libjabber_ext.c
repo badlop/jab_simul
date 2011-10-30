@@ -13,7 +13,7 @@ void tag_iter_init(tag_iter iter,xmlnode xml,char* tag_name) {
 xmlnode tag_iter_get_next(tag_iter iter) {
   xmlnode cur;
   for (cur=iter->cur;cur;cur=xmlnode_get_nextsibling(cur))
-    if ((xmlnode_get_type(cur) == NTYPE_TAG) && 
+    if ((xmlnode_get_type(cur) == NTYPE_TAG) &&
 	(!iter->tag_name || !j_strcmp(xmlnode_get_name(cur),iter->tag_name))) break;
   if (cur) iter->cur=xmlnode_get_nextsibling(cur); else iter->cur=NULL;
   return cur;
@@ -34,10 +34,10 @@ xmlnode xmlnode_get_nth_tag(xmlnode node,int num) {
 void *xhash_get_nth(xht h, int num) {
   int i,j;
   xhn n;
-  
+
   if(h == NULL)
     return NULL;
-  
+
   for(i = 0,j = 0; i < h->prime; i++)
     for(n = &h->zen[i]; n != NULL; n = n->next)
       if(n->key != NULL && n->val != NULL) {

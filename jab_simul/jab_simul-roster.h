@@ -24,7 +24,7 @@ struct priv_roster_item_struct {
   CString LastName;
   CString SMS;
   CString Cyfra;
-  CString Speak;	
+  CString Speak;
   CString JID;
   CString PresenceText;
   CGroupArr Groups;

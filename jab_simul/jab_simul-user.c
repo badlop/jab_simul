@@ -20,7 +20,7 @@ char login_digest[] =
 
 #define STATS 10
 #define STNULL {0,0,0,0,0}
-typedef 
+typedef
 struct s_stat {
   int stat_pos;
   int stat_size;
@@ -72,7 +72,7 @@ xmlnode query_header(user_properities user, char* type,char* xmlns, xmlnode* pxm
     xmlnode_put_attrib(iq_node,"id",makeJCOM_ID(user,idbuf,sizeof(idbuf)));
     query_node=xmlnode_insert_tag(iq_node,"query");
     if (query_node) {
-      xmlnode_put_attrib(query_node,"xmlns", xmlns);      
+      xmlnode_put_attrib(query_node,"xmlns", xmlns);
       *pxmlns_node=query_node;
     }
   }
@@ -83,7 +83,7 @@ int makeQuery(char* buf,int maxlen,char q,
 	      const char* id,const char* query_ns,const char* wpmsg_ns) {
   char* tmp=buf;
   int len;
-  if (id) 
+  if (id)
     len=snprintf(tmp,maxlen,"<iq id=%c%s%c type=%cget%c>",q,id,q,q,q);
   else
     len=snprintf(tmp,maxlen,"<iq type=%cget%c>",q,q);
@@ -92,7 +92,7 @@ int makeQuery(char* buf,int maxlen,char q,
     len=snprintf(tmp,maxlen,"<query xmlns=%c%s%c><wpmsg xmlns=%c%s%c/></query></iq>",q,query_ns,q,q,wpmsg_ns,q);
   else
     len=snprintf(tmp,maxlen,"<query xmlns=%c%s%c/></iq>",q,query_ns,q);
-  tmp+=len;maxlen-=len;  
+  tmp+=len;maxlen-=len;
   return tmp-buf;
 }
 
@@ -100,7 +100,7 @@ void user_store_xml_info
 (user_properities user,char* id,t_xml_response_handler callback, struct timeval* time) {
   //Dodajemy do kolejki usera info o wyslanym xmlu
   user->conn->xml_need_responses_queue=xml_need_response_node_create
-    (id,callback,time,user->conn->xml_need_responses_queue);	    
+    (id,callback,time,user->conn->xml_need_responses_queue);
 }
 
 
@@ -127,15 +127,15 @@ void user_do_your_job(user_properities user, struct timeval* curtime) {
   //if (user->conn && user->conn->state==state_CLOSING) user_conn_kill(user);
   switch (user->state) {
   case UP_DISABLED: return;   //disabled
-  case UP_CAN_LOGIN: 
-    if (user->conn && user->stream_opened) { 
+  case UP_CAN_LOGIN:
+    if (user->conn && user->stream_opened) {
       // we are logging if the connection is estabilished (or at least initiated)
       // The connection must be done by proper repeater (ev_connect)
       if (user->digest_auth) user_do_login_digest(user,curtime);
       else user_do_login_plain(user,curtime);
     }
     break;
-  case UP_IS_LOGGING: 
+  case UP_IS_LOGGING:
     if (user->conn) {
       //Trzeba sprawdzic Timeout
       const long long c_timeout=(long long)user->connection_timeout*1000;
@@ -220,7 +220,7 @@ void handle_roster_response(xmlnode x, user_properities user, struct timeval* qu
     roster_hash_from_xml(user,query,1); //Ladyjemy usuwajac poprzedni
     user_debug(user,ROST_DL,"User %s: roster pociagniety. Liczba kontaktow: %i\n",
 	       user->id.user,user->roster_count);
-    
+
     //Ustawiamy status
     user_do_presence(user,curtime,NULL,NULL,user->Status,user->Show);
     presences_after_roster_count++;
@@ -246,14 +246,14 @@ void handle_numextcontacts_response(xmlnode x, user_properities user, struct tim
     user_debug(user,WARN_DL,"User %s: Problem z pobraniem numextcontacts (%s) !\n",
 	       user->id.user,xmlnode_get_tag_data(x,"error"));
   } else {
-    xmlnode data = xmlnode_get_tag(xmlnode_get_tag(xmlnode_get_tag(x,"query"),"wpmsg"),"data");    
+    xmlnode data = xmlnode_get_tag(xmlnode_get_tag(xmlnode_get_tag(x,"query"),"wpmsg"),"data");
     if (!data) {
       user->priv_rost.numextcontacts=0;
       user_debug(user,PROST_DL,"user %s: numextcontacts ustawione na 0\n",
 		 user->id.user);
     }
     else {
-      user->priv_rost.numextcontacts=j_atoi(xmlnode_get_data(data),0); 
+      user->priv_rost.numextcontacts=j_atoi(xmlnode_get_data(data),0);
       user_debug(user,PROST_DL,"User %s: numextcontacts OK. Version: %i\n",
 		 user->id.user,user->priv_rost.numextcontacts);
     }
@@ -349,11 +349,11 @@ void handle_message(xmlnode x, user_properities user, struct timeval* querytime,
     compiled=1;
     debug(DET_DL,"var_regex: >%s<\n",msg_deb_regex);
     if (regcomp(&c_msg_deb_regexp,msg_deb_regex,REG_EXTENDED)) {
-      compiled=-1; //err    
+      compiled=-1; //err
       debug(ERR_DL,"!!!! %s:%i\n",__FILE__,__LINE__);
     }
   }
-  
+
   if ( !is_admin && body && compiled==1) {
     if (regexec(&c_msg_deb_regexp,body,4,msg_deb_matches,0)==0) {
       int error_msg=!j_strcmp(xmlnode_get_attrib(x,"type"),"error");
@@ -447,7 +447,7 @@ void handle_user_node(xmlnode x, user_properities user, struct timeval* curtime)
     if (node) {
       user_debug(user,INFO_DL,"User %s: Przyszla odpowiedz na Id=%s. Czas: %u ms\n",
 	    user->id.user,id,(unsigned)(ut(*curtime)/1000-ut(node->send_time)/1000));
-      //tak - to odpowiedz na cos naszego. 
+      //tak - to odpowiedz na cos naszego.
       // Usunelismy to z kolejki. Teraz wywolujemy obsluge.
       if (node->callback) node->callback(x,user,&node->send_time,curtime);
       //i usuwamy na dobre
@@ -501,7 +501,7 @@ int user_do_login_plain(user_properities user, struct timeval* curtime) {
   snprintf(xml_buf,sizeof(xml_buf),login_plain,id,user->id.user,user->passwd,user->id.resource);
   jpolld_conn_write_str(user->conn, xml_buf, 1);
   //Dodajemy do kolejki info, ze oczekujemy odpowiedzi, czy sie udalo
-  user_store_xml_info(user,id,handle_login_response,curtime);	    
+  user_store_xml_info(user,id,handle_login_response,curtime);
   user->state=UP_IS_LOGGING;
   user_debug(user,INFO_DL,"User %s: Prosba o zalogowanie wyslana\n",user->id.user);
   return 0;
@@ -524,7 +524,7 @@ int user_do_login_digest(user_properities user, struct timeval* curtime) {
   pool_free(p);
   jpolld_conn_write_str(user->conn, xml_buf, 1);
   //Dodajemy do kolejki info, ze oczekujemy odpowiedzi, czy sie udalo
-  user_store_xml_info(user,id,handle_login_response,curtime);	    
+  user_store_xml_info(user,id,handle_login_response,curtime);
   user->state=UP_IS_LOGGING;
   user_debug(user,INFO_DL,"User %s: Prosba o zalogowanie wyslana\n",user->id.user);
   return 0;
@@ -532,7 +532,7 @@ int user_do_login_digest(user_properities user, struct timeval* curtime) {
 
 int user_do_fetch_properities(user_properities user, struct timeval* curtime) {
   //Wierne odwzorowanie danych slanych przez Kontakt
-  char xml_buf[2000]; 
+  char xml_buf[2000];
   char* tmp;
   int len;
   int bufsize=sizeof(xml_buf);
@@ -540,7 +540,7 @@ int user_do_fetch_properities(user_properities user, struct timeval* curtime) {
   makeQuery(xml_buf,bufsize,'\'',NULL,"jabber:iq:private","wpmsg:ignored");
   jpolld_conn_write_str(user->conn, xml_buf, 1);
   //Dodajemy do kolejki info, ze poprosilismy o wpmsg:ignored i oczekujemy odpowiedzi
-  user_store_xml_info(user,"wpmsg:ignored",NULL,curtime);	    
+  user_store_xml_info(user,"wpmsg:ignored",NULL,curtime);
 
   // i nastepne 3 od razu
   tmp=xml_buf;
@@ -550,9 +550,9 @@ int user_do_fetch_properities(user_properities user, struct timeval* curtime) {
   jpolld_conn_write_str(user->conn, xml_buf, 1);
 
   //Dodajemy do kolejki info, ze poprosilismy o wpmsg:numextcontacts i oczekujemy odpowiedzi
-  user_store_xml_info(user,"wpmsg:numextcontacts",handle_numextcontacts_response,curtime);	    
+  user_store_xml_info(user,"wpmsg:numextcontacts",handle_numextcontacts_response,curtime);
   //Dodajemy do kolejki info, ze poprosilismy o wpmsg:usersettings i oczekujemy odpowiedzi
-  user_store_xml_info(user,"wpmsg:usersettings",NULL,curtime);	    
+  user_store_xml_info(user,"wpmsg:usersettings",NULL,curtime);
   //Dodajemy do kolejki info, ze poprosilismy o fetch rostera i oczekujemy odpowiedzi
   user_store_xml_info(user,"doroster_0",handle_roster_response,curtime);
   debug(INFO_DL,"User %s: Zapytanie inicjalizacyjne wyslane\n",user->id.user);
@@ -568,7 +568,7 @@ int user_do_fetch_extcontacts(user_properities user, struct timeval* curtime) {
   //Dodajemy do kolejki info, ze poprosilismy o wpmsg:extcontacts i oczekujemy odpowiedzi
   ret=jpolld_conn_write_str(user->conn, xml_buf, 1);
   if (!ret) {
-    user_store_xml_info(user,"wpmsg:extcontacts",handle_extcontacts,curtime);	    
+    user_store_xml_info(user,"wpmsg:extcontacts",handle_extcontacts,curtime);
     user_debug(user,INFO_DL,"User %s: Zapytanie o extcontacts wyslane\n",user->id.user);
   }
   return ret;
@@ -606,12 +606,12 @@ int user_do_adddel_roster_item(user_properities user, struct timeval* curtime,
     xmlnode_put_attrib(item,"subscription","none");
     xmlnode_put_attrib(item,"ask","subscribe");
     //Dodajemy do kolejki info, ze oczekujemy odpowiedzi, czy sie udalo dodac
-    user_store_xml_info(user,xmlnode_get_attrib(iq,"id"),handle_add_roster_item_response,curtime);	    
+    user_store_xml_info(user,xmlnode_get_attrib(iq,"id"),handle_add_roster_item_response,curtime);
   } else {
     //Usuwanie rostera
     xmlnode_put_attrib(item,"subscription","remove");
     //Dodajemy do kolejki info, ze oczekujemy odpowiedzi, czy sie udalo usunac
-    user_store_xml_info(user,xmlnode_get_attrib(iq,"id"),handle_del_roster_item_response,curtime);	    
+    user_store_xml_info(user,xmlnode_get_attrib(iq,"id"),handle_del_roster_item_response,curtime);
   }
   return jpolld_conn_write(user->conn, iq, 0);
 }
@@ -624,7 +624,7 @@ int user_do_send_message(user_properities user, struct timeval* curtime,
   char id[10];
   if (!msg) {
     debug(ERR_DL,"Null msg !?!\n");
-    return 0; 
+    return 0;
   }
   p=pool_new();
   xml_buf=pmalloc(p,strlen(msg)+strlen(jid_full)+500);
@@ -649,7 +649,7 @@ int user_do_send_raw_bytes(user_properities user, struct timeval* curtime,char* 
 
 // Tworzy nowy element, ktory mozna dodac do listy oczekiwan na odpowiedz
 xml_need_response xml_need_response_node_create
-(char* id,t_xml_response_handler callback, 
+(char* id,t_xml_response_handler callback,
  struct timeval* time,xml_need_response queue) {
   pool p;
   xml_need_response nr;
@@ -680,7 +680,7 @@ xml_need_response xml_need_response_node_get(char* id,xml_need_response* queue) 
 user_properities user_create(_user_name* uns,
 			     char* passwd,char* resource,char* fullname,
 			     char* host,int port,
-			     event_repeater ev_list, 
+			     event_repeater ev_list,
 			     int ssl) {
   pool p;
   user_properities up;
@@ -699,9 +699,9 @@ user_properities user_create(_user_name* uns,
   up->login_timeout=LOGIN_TIMEOUT;
   up->passwd=pstrdup(p,passwd);
   up->next=NULL;
-  up->conn=NULL;                  
+  up->conn=NULL;
   up->state=UP_DISABLED;         // Domyslnie user jest nieaktywny - disabled, czyli nic nie robi
-  up->events_queue=NULL;         // Domyslnie user nie podejmuje zadnych akcji w czasie, 
+  up->events_queue=NULL;         // Domyslnie user nie podejmuje zadnych akcji w czasie,
                                  //  tylko sie loguje( jesli state=US_CAN_LOGIN )
   up->sooner_activation_tm=0;    // Za pierwszym razem na pewno sprawdzi eventy
   up->tmpid=0;                   // Licznik identyfikatorow wiadomosci wyzerowany
@@ -734,7 +734,7 @@ user_properities user_create(_user_name* uns,
 //Usuwamy strukture
 void user_delete(user_properities up) {
   up->flags|=UPF_EXPECT_KILL; //Ustawiamy flage
-  user_conn_kill(up);  
+  user_conn_kill(up);
   roster_hash_delete(up);
   pool_free(up->id.p);
 }
@@ -746,7 +746,7 @@ void user_handle_repeater_queue(user_properities user,struct timeval* curtime) {
   event_repeater cur_er;
   long long curtimestamp=ut(*curtime);
   // Czy juz nadszedl czas na najblizszy event ?
-  // (specjalnie pamietamy w oddzielnej zmiennej czas aktywacji najblizszego, zeby za 
+  // (specjalnie pamietamy w oddzielnej zmiennej czas aktywacji najblizszego, zeby za
   // kazdym razem nie przeszukiwac calej listy)
   if (user->sooner_activation_tm<=curtimestamp) {
     //Tak, nadszedl. Trzeba znalezc na ktory(ktore) juz czas i trzeba tez znalezc nastepny najblizszy
@@ -762,20 +762,20 @@ void user_handle_repeater_queue(user_properities user,struct timeval* curtime) {
 		}
 		//Wywolujemy procedure obslugi (jesli jest i jesli user jest w odpowiednim stanie)
 		// I jesli counter sie nie wyczerpal TODO wywalac wyczerpane countery
-		if (cur_er->event_handler && 
+		if (cur_er->event_handler &&
 			(cur_er->user_state==UP_EVER || cur_er->user_state==user->state) &&
 			cur_er->counter!=0) {
 
-		  if ( do_events==1 ||   
-			   cur_er->user_state==UP_EVER || 
+		  if ( do_events==1 ||
+			   cur_er->user_state==UP_EVER ||
 			   cur_er->user_state==UP_CAN_LOGIN) {
 			cur_er->event_handler(cur_er,user,curtime);
-			if (cur_er->counter>0) 
+			if (cur_er->counter>0)
 			  cur_er->counter--;
 		  }
-		}	
+		}
       }
-      if (user->sooner_activation_tm>cur_er->activation_tm) { 
+      if (user->sooner_activation_tm>cur_er->activation_tm) {
 		//Znalezlismy jakis blizszy od poprzednio ustawionego, wiec ustawiamy
 		user->sooner_activation_tm=cur_er->activation_tm;
 		debug(DET_DL,"User %s: Current timestamp: %lli [ms]. Sooner timestamp: %lli [ms]\n",
@@ -823,16 +823,16 @@ int user_connect(user_properities user) {
     add_conns(t);
   }
   loc = t->npfd->pos;
-  
+
   user_debug(user,CONN_DL,"[%d] Adding conn at %d\n", t->id, loc);
   t->pfds[loc].fd = connfd;
   t->pfds[loc].events = POLLIN;
-  
+
   t->conns[loc] = jpolld_conn_create(t, loc, user, sstate, &curtime);	    /* sielim PATCH */
   user->conn=t->conns[loc];                                                 /* sielim PATCH */
 
   t->mpfd = (loc > t->mpfd) ? loc: t->mpfd;
-  
+
   if(t->npfd == NULL) {
     user_debug(user,ERR_DL,"[%d] We have a grave error NULL npfd\n", t->id);
   } else {
@@ -843,7 +843,7 @@ int user_connect(user_properities user) {
     //Wysylamy xml'a otwierajacego stream
     snprintf(xml_buf,sizeof(xml_buf),stream_open,user->id.server);
     jpolld_conn_write_str(user->conn, xml_buf, 1);
-  }  
+  }
   debug(CONN_DL,"[%d] Max PFD: %d\n", t->id, t->mpfd);
   return 0;
 }
@@ -877,7 +877,7 @@ int user_conn_kill(user_properities user, char* file, int line) {
     jpolld_conn_unexpected_kill_count++;
     user_debug(user,ERR_DL,"User %s: Unexpected death of user connection (%s:%i)!\n",user->id.user,file,line);
   } else user->flags&=~UPF_EXPECT_KILL; //Zerujemy flage
-  //TODO: Dodac uzaleznienie od dodatkowych flag, czy na pewno 
+  //TODO: Dodac uzaleznienie od dodatkowych flag, czy na pewno
   // ma przechodzic w UP_CAN_LOGIN
   if (user->flags & UPF_EXIT_AFTER_LOGIN) {
     debug(MONIT_DL,"Connection killed !\n");

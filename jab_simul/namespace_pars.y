@@ -31,7 +31,7 @@
 
 expr_list:        expr_list expr | expr;
 
-expr:             NOTHING_SPECIAL {*tmpbuf++=$1.c;*tmpbuf=0;} 
+expr:             NOTHING_SPECIAL {*tmpbuf++=$1.c;*tmpbuf=0;}
                 | BEGIN_EXPR math_expr END_EXPR {
 		  char fmt[30];
 		  sprintf(fmt,"%%%s",$3.s);
@@ -40,7 +40,7 @@ expr:             NOTHING_SPECIAL {*tmpbuf++=$1.c;*tmpbuf=0;}
 
 math_expr:        math_addexpr;
 
-math_addexpr:     math_addexpr OP_PLUS math_mulexpr {$$.i=$1.i+$3.i;}| 
+math_addexpr:     math_addexpr OP_PLUS math_mulexpr {$$.i=$1.i+$3.i;}|
                   math_addexpr OP_MINUS math_mulexpr {$$.i=$1.i-$3.i;}|
                   math_mulexpr;
 

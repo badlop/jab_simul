@@ -6,7 +6,7 @@
  * Version 1.0 (the "JOSL").  You may not copy or use this file, in either
  * source code or executable form, except in compliance with the JOSL. You
  * may obtain a copy of the JOSL at http://www.jabber.org/ or at
- * http://www.opensource.org/.  
+ * http://www.opensource.org/.
  *
  * Software distributed under the JOSL is distributed on an "AS IS" basis,
  * WITHOUT WARRANTY OF ANY KIND, either express or implied.  See the JOSL
@@ -14,18 +14,18 @@
  * JOSL.
  *
  * Copyrights
- * 
- * Portions created by or assigned to Jabber.com, Inc. are 
+ *
+ * Portions created by or assigned to Jabber.com, Inc. are
  * Copyright (c) 1999-2002 Jabber.com, Inc.  All Rights Reserved.  Contact
  * information for Jabber.com, Inc. is available at http://www.jabber.com/.
  *
  * Portions Copyright (c) 1998-1999 Jeremie Miller.
- * 
+ *
  * Acknowledgements
- * 
+ *
  * Special thanks to the Jabber Open Source Contributors for their
  * suggestions and support of Jabber.
- * 
+ *
  * Alternatively, the contents of this file may be used under the terms of the
  * GNU General Public License Version 2 or later (the "GPL"), in which case
  * the provisions of the GPL are applicable instead of those above.  If you
@@ -34,9 +34,9 @@
  * indicate your decision by deleting the provisions above and replace them
  * with the notice and other provisions required by the GPL.  If you do not
  * delete the provisions above, a recipient may use your version of this file
- * under either the JOSL or the GPL. 
- * 
- * 
+ * under either the JOSL or the GPL.
+ *
+ *
  * --------------------------------------------------------------------------*/
 
 
@@ -129,7 +129,7 @@ struct pfree *_pool_free(pool p, pool_cleaner f, void *arg)
     while((ret = _pool__malloc(sizeof(struct pfree))) == NULL) sleep(1);
     ret->f = f;
     ret->arg = arg;
-    ret->next = NULL;    
+    ret->next = NULL;
     return ret;
 }
 
@@ -167,7 +167,7 @@ struct pheap *_pool_heap(pool p, int size)
 
     /* append to the cleanup list */
 #ifdef FAST_POOL
-    clean = _pool_free_fast(ret->block+size, 
+    clean = _pool_free_fast(ret->block+size,
 			    _pool_heap_free, (void *)ret);
 #else
     clean = _pool_free(p, _pool_heap_free, (void *)ret);
@@ -189,13 +189,13 @@ pool _pool_new_heap(int size, char *zone)
 			     size)) == NULL) sleep(1);
     p->cleanup = NULL;
     p->size = 0;
-    
+
 #ifdef POOL_DEBUG
     p->lsize = -1;
     p->zone[0] = '\0';
     strcat(p->zone,zone);
     sprintf(p->name,"%X",p);
-    
+
     if(pool__disturbed == NULL)
       {
         pool__disturbed = 1; /* reentrancy flag! */
@@ -204,7 +204,7 @@ pool _pool_new_heap(int size, char *zone)
     if(pool__disturbed != 1)
       ghash_put(pool__disturbed,p->name,p);
 #endif
-    
+
     ret = (void *)p + sizeof(_pool);
     ret->block = (void*)ret + sizeof(struct pheap);
 
@@ -267,7 +267,7 @@ void *pmalloc_x(pool p, int size, char c)
    if (result != NULL)
            memset(result, c, size);
    return result;
-}  
+}
 
 /* easy safety utility (for creating blank mem for structs, etc) */
 void *pmalloco(pool p, int size)
@@ -275,7 +275,7 @@ void *pmalloco(pool p, int size)
     void *block = pmalloc(p, size);
     memset(block, 0, size);
     return block;
-}  
+}
 
 /* XXX efficient: move this to const char * and then loop throug the existing heaps to see if src is within a block in this pool */
 char *pstrdup(pool p, const char *src)

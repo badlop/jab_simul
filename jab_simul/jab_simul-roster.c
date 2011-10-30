@@ -124,7 +124,7 @@ xmlnode query_wpmsg_set_header(user_properities user,char* ns_wpmsg,xmlnode* pwp
     query_node=xmlnode_insert_tag(iq_node,"query");
     if (query_node) {
       xmlnode wpmsg_node;
-      xmlnode_put_attrib(query_node,"xmlns","jabber:iq:private");      
+      xmlnode_put_attrib(query_node,"xmlns","jabber:iq:private");
       wpmsg_node=xmlnode_insert_tag(query_node,"wpmsg");
       if (wpmsg_node) {
 	xmlnode_put_attrib(wpmsg_node,"xmlns",ns_wpmsg);
@@ -141,12 +141,12 @@ xmlnode priv_roster_list2xml(user_properities user) {
   xmlnode iq_node=query_wpmsg_set_header(user,"wpmsg:extcontacts",&wpmsg_node);
   debug(PROST_DL,"%s(%p)\n",__FUNCTION__,user);
   if (!user->priv_rost.loaded) return NULL;
-  if (wpmsg_node) {	
+  if (wpmsg_node) {
     /* *********************** */
     xmlnode contacts_node;
     xmlnode groups_node;
     xmlnode data_node;
-    
+
     /* CONTACTS BEGIN */
     contacts_node=xmlnode_insert_tag(wpmsg_node,"contacts");
     if (contacts_node) {
@@ -175,10 +175,10 @@ xmlnode priv_roster_list2xml(user_properities user) {
 	    xmlnode_insert_cdata(xmlnode_insert_tag(groups_node,"groupitem"),grp->name,-1);
 	  }
 	}
-      }	  
-    }	
+      }
+    }
     /* CONTACTS END */
-    
+
     /* GROUPS BEGIN */
     groups_node=xmlnode_insert_tag(wpmsg_node,"groups");
     if (groups_node) {
@@ -194,7 +194,7 @@ xmlnode priv_roster_list2xml(user_properities user) {
       xmlnode_insert_cdata(xmlnode_insert_tag(groupall_node,"name"),user->priv_rost.gall->name,-1);
       xmlnode_insert_cdata(xmlnode_insert_tag(groupall_node,"exp"),user->priv_rost.gall->exp?"1":"0",-1);
     }
-    
+
     /* DATA BEGIN */
     data_node=xmlnode_insert_tag(wpmsg_node,"data");
     if (data_node) {
@@ -214,7 +214,7 @@ xmlnode priv_roster_numextcontacts2xml(user_properities user) {
   xmlnode iq_node=query_wpmsg_set_header(user,"wpmsg:numextcontacts",&wpmsg_node);
   debug(PROST_DL,"%s(%p)\n",__FUNCTION__,user);
   if (!user->priv_rost.loaded) return NULL;
-  if (wpmsg_node) {	
+  if (wpmsg_node) {
     /* NUMEXTCONTACTS BEGIN */
     xmlnode data_node=xmlnode_insert_tag(wpmsg_node,"data");
     if (data_node) {
@@ -241,20 +241,20 @@ priv_roster_item priv_roster_item_create
   pri->DisplayName = pstrdup(p,displayname);
   if (!pri->DisplayName) pri->DisplayName=pri->NickName;
   pri->FirstName = pstrdup(p,firstname);
-  
+
   pri->SMS = pstrdup(p,sms);
   pri->Cyfra = pstrdup(p,cyfra);
   pri->LastName = pstrdup(p,lastname);
   pri->Speak = pstrdup(p,speak);
-  if (!pri->Speak) pri->Speak = "Standard";    
-  
+  if (!pri->Speak) pri->Speak = "Standard";
+
   pri->Flash = flash;
   pri->SpeakPres = speak_pres;
-  pri->PresenceText = pstrdup(p,pres_text);   
+  pri->PresenceText = pstrdup(p,pres_text);
 
   pri->Groups=NULL;
   pri->next=NULL;
-  
+
   return pri;
 }
 
@@ -268,7 +268,7 @@ void privLoadContacts(user_properities user,xmlnode cxml) {
   priv_roster_item *tail=&user->priv_rost.priv_rost_list;
   tag_iter_init(&contacts_iter,cxml,"item");
   user_debug(user,PROST_DL,"User %s: %s\n",user->id.user,__FUNCTION__);
-  
+
   while ((cur_item=tag_iter_get_next(&contacts_iter))) {
     xmlnode groups;
     priv_roster_item pri=
@@ -305,8 +305,8 @@ void privLoadContacts(user_properities user,xmlnode cxml) {
 	  *tail=node;
 	  tail=&node->next;
 	  user_debug(user,PROST_DL,"User %s: Kontakt %s dodany do grupy %s\n",
-		     user->id.user,pri->DisplayName,gname);	  
-	} else 
+		     user->id.user,pri->DisplayName,gname);
+	} else
 	  user_debug(user,ERR_DL,"User %s: Nieznana nazwa grupy (%s) w kontakcie %s !!!\n",
 		     user->id.user,gname,pri->DisplayName);
       }
@@ -325,7 +325,7 @@ void privLoadGroups(user_properities user,xmlnode gxml) {
   int grpallexp;
   tag_iter_init(&groups_iter,gxml,"group");
   user_debug(user,PROST_DL,"User %s: %s\n",user->id.user,__FUNCTION__);
-  
+
   while ((cur_item=tag_iter_get_next(&groups_iter))) {
     group_item gri=group_item_create(xmlnode_get_tag_data(cur_item,"name"),
 				     j_strcmp(xmlnode_get_tag_data(cur_item,"exp"),"0")!=0);
@@ -347,7 +347,7 @@ void privLoadGroups(user_properities user,xmlnode gxml) {
   user_debug(user,PROST_DL,"User %s: groupall item created(%s,%i)\n",
 	     user->id.user,user->priv_rost.gall->name,user->priv_rost.gall->exp);
 }
-  
+
 group_item group_item_create(char* name,int exp) {
   pool p;
   group_item gi;

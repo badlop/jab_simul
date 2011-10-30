@@ -3,7 +3,7 @@
 
 #define ut(t) ((long long)((t).tv_sec)*1000000 + (t).tv_usec)
 
-// default to disable karma 
+// default to disable karma
 #define KARMA_READ_MAX(k) (k*100) /* how much you are allowed to read off the sock */
 #define KARMA_INIT -100   /* internal "init" value, should not be able to get here */
 #define KARMA_HEARTBEAT 2000 /* miliseconds to register for heartbeat */

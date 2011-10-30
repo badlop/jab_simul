@@ -52,7 +52,7 @@ int make_conn_socket(u_short port, char *host, sock_state *psstate) {
 
   *psstate=sock_NOT_CONNECTED;
   bzero((void *)&sa,sizeof(struct sockaddr_in));
-  
+
   if((s = socket(AF_INET,SOCK_STREAM,0)) < 0)
     return(-1);
 
@@ -66,9 +66,9 @@ int make_conn_socket(u_short port, char *host, sock_state *psstate) {
     return(-1);
   sa.sin_family = AF_INET;
   sa.sin_port = htons(port);
-  
+
   sa.sin_addr.s_addr = saddr->s_addr;
-  
+
   cres=connect(s,(struct sockaddr*)&sa,sizeof sa);
   debug(INFO_DL,"connect(%i)->%i%s\n",s,cres,strerror(errno));
 
@@ -174,11 +174,11 @@ void add_conns(jpolld_thread t)
 }
 
 int jpolld_conn_create_count=0;
-jpolld_conn jpolld_conn_create(jpolld_thread t, int loc, user_properities user, 
+jpolld_conn jpolld_conn_create(jpolld_thread t, int loc, user_properities user,
 			       sock_state sstate, struct timeval* cr_time) {
   pool p;
   jpolld_conn nc;
-  
+
   jpolld_conn_create_count++;
   p = pool_new();
   nc = pmalloco(p, sizeof(_jpolld_conn));
@@ -186,7 +186,7 @@ jpolld_conn jpolld_conn_create(jpolld_thread t, int loc, user_properities user,
   nc->p = p;
   nc->xs = xstream_new(nc->p, jpolld_conn_node, nc);
   nc->state = state_UNKNOWN;
-  
+
   nc->t = t;
   nc->admin_flags=0;                    /* sielim PATCH */
   nc->user = user;                      /* sielim PATCH */
@@ -198,7 +198,7 @@ jpolld_conn jpolld_conn_create(jpolld_thread t, int loc, user_properities user,
     nc->ssl = jab_ssl_conn(t->pfds[loc].fd);
 
     if ((sstate ==sock_CONNECTED) && (nc->ssl)) {
-      jab_ssl_connect(nc->ssl);    
+      jab_ssl_connect(nc->ssl);
     }
   }
 
@@ -208,7 +208,7 @@ jpolld_conn jpolld_conn_create(jpolld_thread t, int loc, user_properities user,
 int jpolld_find_conn(jpolld_thread t, int fd)
 {
     int j;
-    
+
     for(j = 0; j<MAX_PFDS; j++)
     {
         if(t->pfds[j].fd == fd)
@@ -228,13 +228,13 @@ void _jpolld_conn_write(jpolld_conn c) {
 
   if(!c)
     return;
-  while (c->writer != NULL) { 
+  while (c->writer != NULL) {
     if (c->ssl)
-      len = jab_ssl_write(c->ssl, c->writer->cbuffer, 
-			 strlen(c->writer->cbuffer), 
+      len = jab_ssl_write(c->ssl, c->writer->cbuffer,
+			 strlen(c->writer->cbuffer),
 			 &blocked);
     else
-      len = write(c->t->pfds[c->loc].fd, c->writer->cbuffer, 
+      len = write(c->t->pfds[c->loc].fd, c->writer->cbuffer,
 		  strlen(c->writer->cbuffer));
 
     debug(DET_DL, "[%d] We wrote to %i: %s\n", c->t->id, c->loc, c->writer->cbuffer);
@@ -347,7 +347,7 @@ int jpolld_conn_write(jpolld_conn c, xmlnode x, int force)
     jpolld_write_buf b;
     jpolld_write_buf cur;
     pool p;
-    
+
     if(!c)
       return -1;
     packets_created++;
@@ -399,22 +399,22 @@ void jpolld_conn_kill(jpolld_conn c,char* s,int l) {
     int loc = (int)c->loc;
     jpolld_thread t = (jpolld_thread)c->t;
     debug(WARN_DL,"Connection killed from %s:%i\n",s,l);
-    
+
     close(t->pfds[loc].fd);
-    
+
     t->mpfd == loc ? t->mpfd-- : t->mpfd;
     cur_npfd = malloc(sizeof(_next_pfd));
     cur_npfd->pos = loc;
     cur_npfd->next = t->npfd;
     t->npfd = cur_npfd;
-    
+
     t->pfds[loc].fd = -1;
     t->pfds[loc].events = 0;
     t->conns[loc] = NULL;
     if(c->reader) {
       jpolld_read_buf rb;
       jpolld_read_buf rb_cur;
-      
+
       rb = c->reader;
       while(rb != NULL) {
 	rb_cur = rb->next;
@@ -425,7 +425,7 @@ void jpolld_conn_kill(jpolld_conn c,char* s,int l) {
     if(c->writer) {
       jpolld_write_buf wb;
       jpolld_write_buf wb_cur;
-      
+
       wb = c->writer;
       while(wb != NULL) {
 	wb_cur = wb->next;
@@ -438,7 +438,7 @@ void jpolld_conn_kill(jpolld_conn c,char* s,int l) {
     if(c->xml_need_responses_queue) {
       xml_need_response nr;
       xml_need_response nr_cur;
-      
+
       nr = c->xml_need_responses_queue;
       while(nr != NULL) {
 	nr_cur = nr->next;

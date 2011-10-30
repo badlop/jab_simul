@@ -177,7 +177,7 @@ struct jpolld_conn_struct
   user_properities user;                   /* sielim PATCH */
   xml_need_response xml_need_responses_queue;  /* sielim PATCH */
   void *ssl;
-}; 
+};
 
 /* sielim PATCH begin */
 /* struktura do przechowywania informacji o wyslanych xml'ach, ktore wymagaja odeslania */
@@ -267,7 +267,7 @@ struct jpolld_thread_struct
     char *host;
     char *sid;
     conn_state mstate;
-    
+
     /* This is our real conns */
     int mpfd;
     next_pfd npfd;
@@ -351,7 +351,7 @@ int user_do_presence(user_properities user, struct timeval* curtime, char* type,
 int user_do_adddel_roster_item(user_properities, struct timeval*, char*, char*, int);
 int user_do_send_message(user_properities, struct timeval*,char*, char*);
 int user_do_send_raw_bytes(user_properities, struct timeval*,char*);
- 
+
 #define xml_need_response_node_delete(x) pool_free(x->p);
 
 void copy_repeaters(pool p, event_repeater* plist_to, event_repeater listfrom);

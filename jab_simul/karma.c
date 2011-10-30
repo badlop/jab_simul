@@ -5,7 +5,7 @@
 void karma_inc(struct s_karma *k,struct timeval* cur_time)
 {
     int punishment_over = 0;
-    
+
     /* only increment every KARMA_HEARTBEAT seconds */
     if( ( ut(k->last_update) + (long long)KARMA_HEARTBEAT*1000
 	  > ut(*cur_time) ) && k->last_update.tv_sec != 0)
@@ -40,7 +40,7 @@ void karma_dec(struct s_karma *k,struct timeval* curtime)
     k->val -= k->dec;
 
     /* if below zero, set to penalty */
-    if( k->val <= 0 ) 
+    if( k->val <= 0 )
         k->val = k->penalty;
 }
 
@@ -48,7 +48,7 @@ void karma_dec(struct s_karma *k,struct timeval* curtime)
 int karma_chk(struct s_karma *k,long bytes_read,struct timeval* curtime)
 {
     /* first, check for need to update */
-    if( ( ut(k->last_update) + (long long)KARMA_HEARTBEAT*1000 
+    if( ( ut(k->last_update) + (long long)KARMA_HEARTBEAT*1000
 	  < ut(*curtime) ) || k->last_update.tv_sec == 0)
         karma_inc( k, curtime );
 

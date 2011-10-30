@@ -67,7 +67,7 @@ clean:
 	rm -f $(jabberd_XODEOBJECTS) $(local_OBJECTS) $(APPNAME) changelog.inc config.h namespace_scan.c namespace_pars.c y.tab.*
 
 clean-stuff:
-	rm -f *~ 
+	rm -f *~
 
 namespace_scan.c: namespace_scan.l y.tab.h namespace_type.h
 	lex -t namespace_scan.l > namespace_scan.c
