@@ -64,7 +64,7 @@ changelog.inc: CHANGELOG
 	./configure
 
 clean:
-	rm -f $(jabberd_XODEOBJECTS) $(local_OBJECTS) $(APPNAME) changelog.inc config.h namespace_scan.c namespace_pars.c y.tab.*
+	rm -f $(jabberd_XODEOBJECTS) $(local_OBJECTS) $(APPNAME) changelog.inc config.h namespace_scan.c namespace_pars.c y.tab.* jab_simul*.log
 
 clean-stuff:
 	rm -f *~ 
