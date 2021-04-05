@@ -3,7 +3,25 @@
     =========
 
     Authors: unknown yet
-    Copyright: unknown yet
+    Copyright: Wirtualna Polska S.A.
     License: unknown yet (maybe it was GPL?)
 
 jab_simul is a simple Jabber clients load simulator.
+
+To compile it, you probably need to install those packages:
+  byacc flex
+
+This tool uses XEP-0078: Non-SASL Authentication, which is obosolete and newer
+Jabber/XMPP servers do not support it, or require specific configuration.
+For example, in ejabberd, you must enable mod_legacy_auth.
+
+It throws errors when enabling this option in the send_message event:
+  <prepend_with_debug_info/>
+
+It supports the old Jabber SSL encryption, but instead of port 5223, it expects it in 5222.
+For example, in ejabberd, configure like this:
+listen:
+  -
+    port: 5222
+    module: ejabberd_c2s
+    tls: true
