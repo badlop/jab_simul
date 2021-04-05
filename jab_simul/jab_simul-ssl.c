@@ -55,7 +55,7 @@ ssize_t jab_ssl_read(void *ssl, void *buf, size_t count, int *blocked)
     if(count <= 0)
         return 0;
 
-    if(SSL_get_state(ssl) != SSL_ST_OK)
+    if(SSL_get_state(ssl) != TLS_ST_OK)
       {
       sret = SSL_connect(ssl);
         if(sret <= 0)
@@ -115,7 +115,7 @@ ssize_t jab_ssl_write(void *ssl, const void *buf, size_t count, int *blocked)
 {
     *blocked = 0;
 
-    if(SSL_get_state(ssl) != SSL_ST_OK)
+    if(SSL_get_state(ssl) != TLS_ST_OK)
     {
         int sret;
 
