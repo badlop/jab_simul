@@ -1,0 +1,9 @@
+jab_simul/*.o
+jab_simul/changelog.inc
+jab_simul/config.h
+jab_simul/jab_simul
+jab_simul/jab_simul*.log
+jab_simul/namespace_scan.c
+jab_simul/y.tab.c
+jab_simul/y.tab.h
+jabberd/lib/*.o
