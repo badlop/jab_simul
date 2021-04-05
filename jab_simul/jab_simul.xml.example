@@ -1,10 +1,9 @@
 <dpsm>
 
-
+  <!-- Generatory przestrzeni nazw userow -->
   <events_after>1</events_after>
 
-
-  <!--  -->
+  <!-- Userzy testowi -->
   <user_names_generator>
     <range><from>100</from><to>299</to></range>
     <name>user%(num:u)</name>
@@ -18,7 +17,8 @@
     	<fullname>user%(num*2:u)-%(3+num%12000/(1+3)+7:u)</fullname>
 	<password>passwd%(num:u)</password>
 	<resource>Tester</resource>
-	<Xhost>localhost</Xhost>
+	<host>localhost</host>
+	<ssl/>
 <!-- Pelny log socketow -->
 	<sniff>/tmp</sniff>
 <!-- Polacz sie z serwerem -->
@@ -39,7 +39,7 @@
 	<event><name>send_message</name><frequency>30000</frequency>
 		<user><range><from>100</from><to>299</to></range></user>
 		<prepend_with_debug_info/>
-		<Xfile>wiadomosc.txt</Xfile>
+		<file>wiadomosc.txt</file>
                 <text>Wiadomosc testowa krotka</text></event>
 <!-- Zmieniamy status -->
 	<event><name>change_status</name><frequency>60000</frequency>
@@ -48,13 +48,13 @@
 	</event>
 
 <!-- Zamykaj ladnie polaczenie -->
-	<Xevent><name>logout</name><frequency>300000</frequency></Xevent>
+	<event><name>logout</name><frequency>300000</frequency></event>
 <!-- Zabijaj polaczenie -->
-	<Xevent><name>kill_connection</name><frequency>150000</frequency></Xevent>
+	<event><name>kill_connection</name><frequency>150000</frequency></event>
 <!-- Tez powinno zabic polaczenie -->
-	<Xevent><name>send_raw_bytes</name><frequency>300000</frequency>
+	<event><name>send_raw_bytes</name><frequency>300000</frequency>
 		<random_stream len="1000"/>
-        </Xevent>
+        </event>
 
    </properities>
   </user_properities>
